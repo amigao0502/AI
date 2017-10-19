@@ -88,16 +88,20 @@ def inception_layer(inputdata):
     return l
 
 
-def get_conv_sym(n_layer, inputdata):
+def get_conv_sym(n_layer):
 
     """
     :return: symbol of a convolutional neural network
     """
-    data_f = mx.sym.flatten(data=inputdata)
+    data = mx.sym.Variable("data")
+    data_f = mx.sym.flatten(data=data)
     
     layer = conv_layer(data_f,3,2,True,True)
     for i in range(n_layer - 1):
         layer = conv_layer(layer,3,2,True,True)
     layer = mx.sym.Flatten(layer)
     l = mx.sym.FullyConnected(layer,num_hidden = 10)
-    return l
+                              
+    # Softmax 
+    myl = mx.sym.SoftmaxOutput(data=l, name='softmax')
+    return myl
